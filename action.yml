@@ -1,0 +1,15 @@
+name: 'subtree-splitter'
+description: 'Sync your git repository subtree-splits'
+inputs:
+    config-path:
+        required: true
+        description: 'Configuration file path'
+    source-branch:
+        description: 'Branch to split from'
+        required: true
+runs:
+    using: 'node12'
+    main: 'dist/index.js'
+branding:
+    icon: shuffle
+    color: yellow

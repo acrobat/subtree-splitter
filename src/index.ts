@@ -56,7 +56,7 @@ async function downloadSplitsh() {
         // On push sync commits
         await Promise.all(subtreeSplits.map(async (split: subtreeSplit) => {
             await ensureRemoteExists(split.name, split.target);
-            await publishSubSplit(splitshPath, split.name, branch, split.name, split.directory);
+            await publishSubSplit(splitshPath, 'origin', split.name, branch, split.name, split.directory);
         }));
     } else if (context.eventName === 'create') {
         // Tag created

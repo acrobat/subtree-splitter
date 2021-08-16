@@ -21,8 +21,8 @@ async function tagExists(tag: string, directory: string): Promise<boolean> {
     }
 }
 
-async function publishSubSplit(binary: string, target: string, branch: string, name: string, directory: string): Promise<void> {
-    let hash = await getExecOutput(binary, [`--prefix=${directory}`, `--origin=origin/${branch}`]);
+async function publishSubSplit(binary: string, origin: string, target: string, branch: string, name: string, directory: string): Promise<void> {
+    let hash = await getExecOutput(binary, [`--prefix=${directory}`, `--origin=${origin}/${branch}`]);
 
     await exec('git', ['push', target, `${hash.trim()}:refs/heads/${branch}`, '-f']);
 }

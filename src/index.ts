@@ -64,6 +64,8 @@ async function downloadSplitsh() {
         let tag = event.ref;
 
         if (event.ref_type !== 'tag') {
+            console.log('No tag was created, skipping...');
+
             return;
         }
 
@@ -85,6 +87,8 @@ async function downloadSplitsh() {
         let tag = event.ref;
 
         if (event.ref_type !== 'tag') {
+            console.log('No tag was deleted, skipping...');
+
             return;
         }
 

@@ -11,7 +11,7 @@ import * as path from 'path';
 
 const splitshPath = './splitsh'
 
-async function downloadSplitsh() {
+async function downloadSplitsh(): Promise<void> {
     let splitshDir = path.dirname(splitshPath);
     let downloadDir = '/tmp/splitsh/';
 

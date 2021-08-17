@@ -24,9 +24,9 @@ jobs:
                 run: npx @zeit/ncc build src/index.ts --minify
 
             -   name: Commit & Push changes
-                uses: actions-js/push@v1
+                uses: actions-js/push@v1.3
                 with:
                     github_token: ${{ secrets.GITHUB_TOKEN }}
                     branch: main
-                    message: 'Compile action code'
+                    message: 'Auto-compile dist code'
 

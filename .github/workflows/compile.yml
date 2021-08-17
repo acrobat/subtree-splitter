@@ -6,13 +6,19 @@ on:
             - src/**
 
 jobs:
-    build:
+    compile:
+        name: Compile typescript code
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v2
                 with:
                     persist-credentials: false
                     fetch-depth: 0
+
+            -   uses: actions/setup-node@v2
+
+            -   name: Install dependencies
+                run: npm install
 
             -   name: Compile with ncc
                 run: npx @zeit/ncc build src/index.ts --minify

@@ -1,4 +1,4 @@
-import {exec, ExecOptions} from "@actions/exec";
+import {exec, ExecOptions} from '@actions/exec';
 
 async function getExecOutput(command: string, args: string[], options?: ExecOptions): Promise<string> {
     let output = '';

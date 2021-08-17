@@ -1,4 +1,4 @@
-import { exec } from "@actions/exec";
+import { exec } from '@actions/exec';
 import { getExecOutput } from './github';
 
 async function ensureRemoteExists(name: string, target: string): Promise<void> {
@@ -13,7 +13,7 @@ async function ensureRemoteExists(name: string, target: string): Promise<void> {
 
 async function tagExists(tag: string, directory: string): Promise<boolean> {
     try {
-        let code = await exec('git', ['show-ref', '--tags', '--quiet', '--verify', '--', `refs/tags/${tag}`], {cwd: directory});
+        let code = await exec('git', ['show-ref', '--tags', '--quiet', '--verify', '--', `refs/tags/${tag}`], { cwd: directory });
 
         return code === 0;
     } catch (err) {

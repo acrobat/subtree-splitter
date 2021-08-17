@@ -1,0 +1,26 @@
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - src/**
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v2
+                with:
+                    persist-credentials: false
+                    fetch-depth: 0
+
+            -   name: Compile with ncc
+                run: npx @zeit/ncc build src/index.ts --minify
+
+            -   name: Commit & Push changes
+                uses: actions-js/push@v1
+                with:
+                    github_token: ${{ secrets.GITHUB_TOKEN }}
+                    branch: main
+                    message: 'Compile action code'
+

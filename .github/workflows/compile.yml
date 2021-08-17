@@ -29,4 +29,6 @@ jobs:
                     github_token: ${{ secrets.GITHUB_TOKEN }}
                     branch: main
                     message: 'Auto-compile dist code'
+                    author_name: 'Jeroen Thora'
+                    author_email: '1374857+acrobat@users.noreply.github.com'
 

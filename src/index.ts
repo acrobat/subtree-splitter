@@ -41,8 +41,6 @@ async function downloadSplitsh() {
     const configPath = core.getInput('config-path');
     const branch = core.getInput('source-branch');
 
-    console.log(configPath, branch);
-
     if (!fs.existsSync(splitshPath)) {
         await downloadSplitsh();
     }

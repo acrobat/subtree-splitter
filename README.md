@@ -37,7 +37,16 @@ Example workflow to sync commits and tags.
 
 ```yaml
 on:
+    on:
     push:
+        # Only trigger for specific branches or changes in specific paths.
+        branches:
+            - '*'
+        paths:
+            - src/**
+        # Tag push events should be ignored, they will be handled with the create event below.
+        tags-ignore:
+            - '*'
     create:
         tags:
             - '*'
@@ -51,6 +60,9 @@ jobs:
         name: Sync commits
         steps:
             -   uses: actions/checkout@v2
+                with:
+                    persist-credentials: false
+                    fetch-depth: 0
 
             # Add a personal access token to the repository secrets. This will allow the splitter action to push the new commits
             -   uses: frankdejonge/use-github-token@1.0.1
@@ -68,6 +80,7 @@ jobs:
 
             # Retrieve the branch name of the branch that triggered the build.
             -   name: Extract branch name
+                id: vars
                 run: echo ::set-output name=branch_name::${GITHUB_REF#refs/*/}
 
             # Sync commits and tags for the configured subtree splits

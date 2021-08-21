@@ -24,7 +24,7 @@ async function downloadSplitsh(): Promise<void> {
     let downloadPath = `${downloadDir}split-lite.tar.gz`;
     let platform = process.platform === 'darwin' ? 'lite_darwin_amd64' : 'lite_linux_amd64';
 
-    console.log(`Downloading splitsh for "${platform}"`);
+    core.debug(`Downloading splitsh for "${platform}"`);
 
     let url = `https://github.com/splitsh/lite/releases/download/v1.0.1/${platform}.tar.gz`;
 
@@ -62,7 +62,7 @@ async function downloadSplitsh(): Promise<void> {
         let tag = event.ref;
 
         if (event.ref_type !== 'tag') {
-            console.log('No tag was created, skipping...');
+            core.info('No tag was created, skipping...');
 
             return;
         }
@@ -85,7 +85,7 @@ async function downloadSplitsh(): Promise<void> {
         let tag = event.ref;
 
         if (event.ref_type !== 'tag') {
-            console.log('No tag was deleted, skipping...');
+            core.info('No tag was deleted, skipping...');
 
             return;
         }

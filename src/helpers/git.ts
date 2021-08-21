@@ -1,4 +1,5 @@
 import { exec } from '@actions/exec';
+import * as core from '@actions/core';
 import { getExecOutput } from './github';
 
 async function ensureRemoteExists(name: string, target: string): Promise<void> {
@@ -29,7 +30,8 @@ async function publishSubSplit(binary: string, target: string, branch: string, n
 
 async function commitHashHasTag(hash: string, clonePath: string) {
     let output = await getExecOutput('git', ['tag', '--points-at', hash], { cwd: clonePath });
-    console.log(hash, 'points-at', output);
+
+    core.info(`${hash} points-at ${output}`);
 
     return output !== '';
 }

@@ -9,7 +9,6 @@ This actions synchronizes a monolithic repository to standalone repositories by 
 > Specify using `with` keyword
 
 * `config-path` - **(Required)** Location of the subtree split mapping configuration
-* `source-branch` - Source branch to execute the subtree split from
 
 ### Example workflow
 
@@ -78,15 +77,9 @@ jobs:
                     path: './splitsh'
                     key: '${{ runner.os }}-splitsh-v101'
 
-            # Retrieve the branch name of the branch that triggered the build.
-            -   name: Extract branch name
-                id: vars
-                run: echo ::set-output name=branch_name::${GITHUB_REF#refs/*/}
-
             # Sync commits and tags for the configured subtree splits
             -   name: subtree split
                 uses: acrobat/subtree-splitter@v1
                 with:
                     config-path: .github/subtree-splitter-config.json # Reference the location where you saved your config file
-                    source-branch: ${{ steps.vars.outputs.branch_name }} # The branch name is used when syncing commits, this is ignored when a tag is pushed/deleted
 ```

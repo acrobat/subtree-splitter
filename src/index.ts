@@ -63,8 +63,6 @@ async function downloadSplitsh(): Promise<void> {
             return;
         }
 
-        console.log('Found branch: '+branch);
-
         // On push sync commits
         await Promise.all(subtreeSplits.map(async (split: subtreeSplit) => {
             await ensureRemoteExists(split.name, split.target);

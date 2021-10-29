@@ -39,7 +39,6 @@ async function downloadSplitsh(): Promise<void> {
 (async () => {
     const context = github.context;
     const configPath = core.getInput('config-path');
-    const branch = core.getInput('source-branch');
 
     if (!fs.existsSync(splitshPath)) {
         await downloadSplitsh();
@@ -50,7 +49,11 @@ async function downloadSplitsh(): Promise<void> {
 
     console.table(subtreeSplits);
 
-    if (context.eventName === 'push') {
+    if (context.eventName === 'push' && context.ref.includes('refs/heads') ) {
+        const branch = context.ref.replace('/refs/heads', '');
+
+        console.log('Found branch: '+branch);
+
         // On push sync commits
         await Promise.all(subtreeSplits.map(async (split: subtreeSplit) => {
             await ensureRemoteExists(split.name, split.target);

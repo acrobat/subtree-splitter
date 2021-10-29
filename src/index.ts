@@ -49,8 +49,19 @@ async function downloadSplitsh(): Promise<void> {
 
     console.table(subtreeSplits);
 
-    if (context.eventName === 'push' && context.ref.includes('refs/heads') ) {
-        const branch = context.ref.replace('/refs/heads', '');
+    if (context.eventName === 'push' ) {
+        if (!context.ref.includes('refs/heads')) {
+            core.info('Push event was for a tag, skipping...');
+
+            return;
+        }
+
+        const branch = context.ref.split('/').pop();
+        if (typeof branch == 'undefined') {
+            core.error('Unable to get branch name from event data. Got ref "'+context.ref+'"');
+
+            return;
+        }
 
         console.log('Found branch: '+branch);
 

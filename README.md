@@ -36,7 +36,6 @@ Example workflow to sync commits and tags.
 
 ```yaml
 on:
-    on:
     push:
         # Only trigger for specific branches or changes in specific paths.
         branches:

@@ -49,6 +49,11 @@ async function downloadSplitsh(): Promise<void> {
 
     console.table(subtreeSplits);
 
+    // Make sure all remotes are correctly setup, this must be done synchronously to avoid race conditions.
+    subtreeSplits.map((split: subtreeSplit) => {
+        ensureRemoteExists(split.name, split.target);
+    });
+
     if (context.eventName === 'push' ) {
         if (!context.ref.includes('refs/heads')) {
             core.info('Push event was for a tag, skipping...');
@@ -65,7 +70,6 @@ async function downloadSplitsh(): Promise<void> {
 
         // On push sync commits
         await Promise.all(subtreeSplits.map(async (split: subtreeSplit) => {
-            await ensureRemoteExists(split.name, split.target);
             await publishSubSplit(splitshPath, split.name, branch, split.name, split.directory);
         }));
     } else if (context.eventName === 'create') {

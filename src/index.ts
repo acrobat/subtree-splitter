@@ -43,6 +43,8 @@ async function promiseAllInBatches(subtreeSplits: subtreeSplit[], handler: any):
     const batchSize = 4;
     let position = 0;
     while (position < subtreeSplits.length) {
+        core.info('Processing batch ' + (position / batchSize + 1) + '/'+(Math.round(subtreeSplits.length / batchSize)));
+
         const itemsForBatch = subtreeSplits.slice(position, position + batchSize);
 
         //TODO: use allSettled instead?

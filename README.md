@@ -56,6 +56,7 @@ jobs:
     sync_commits:
         runs-on: ubuntu-latest
         name: Sync commits
+        if: github.repository == 'your-org/your-repository' # Execute this workflow job only on the main repository.
         steps:
             -   uses: actions/checkout@v2
                 with:

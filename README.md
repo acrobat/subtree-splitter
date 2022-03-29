@@ -9,6 +9,7 @@ This actions synchronizes a monolithic repository to standalone repositories by 
 > Specify using `with` keyword
 
 * `config-path` - **(Required)** Location of the subtree split mapping configuration
+* `batch-size` - How many subtreesplits should be processed in parallel. It is recommended to keep this amount low (or even at 1) for large repositories.
 
 ### Example workflow
 

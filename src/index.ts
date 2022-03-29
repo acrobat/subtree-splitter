@@ -39,15 +39,13 @@ async function downloadSplitsh(): Promise<void> {
 /**
  * @param {function(subtreeSplit): Promise<void>} handler
  */
-async function promiseAllInBatches(subtreeSplits: subtreeSplit[], handler: any): Promise<void> {
-    const batchSize = 1;
+async function promiseAllInBatches(subtreeSplits: subtreeSplit[], batchSize: number, handler: any): Promise<void> {
     let position = 0;
     while (position < subtreeSplits.length) {
         core.info('Processing batch ' + (position / batchSize + 1) + '/'+(Math.round(subtreeSplits.length / batchSize)));
 
         const itemsForBatch = subtreeSplits.slice(position, position + batchSize);
 
-        //TODO: use allSettled instead?
         await Promise.all(itemsForBatch.map(split => handler(split)));
         position += batchSize;
     }
@@ -56,6 +54,8 @@ async function promiseAllInBatches(subtreeSplits: subtreeSplit[], handler: any):
 (async () => {
     const context = github.context;
     const configPath = core.getInput('config-path');
+    const batchSizeConfig = core.getInput('batch-size');
+    const batchSize = isNaN(parseInt(batchSizeConfig)) ? 1 : parseInt(batchSizeConfig);
 
     if (!fs.existsSync(splitshPath)) {
         await downloadSplitsh();
@@ -86,7 +86,7 @@ async function promiseAllInBatches(subtreeSplits: subtreeSplit[], handler: any):
         }
 
         // On push sync commits
-        await promiseAllInBatches(subtreeSplits, async (split: subtreeSplit) => {
+        await promiseAllInBatches(subtreeSplits, batchSize, async (split: subtreeSplit) => {
             await publishSubSplit(splitshPath, split.name, branch, split.name, split.directory);
         });
     } else if (context.eventName === 'create') {
@@ -100,7 +100,7 @@ async function promiseAllInBatches(subtreeSplits: subtreeSplit[], handler: any):
             return;
         }
 
-        await promiseAllInBatches(subtreeSplits, async (split: subtreeSplit) => {
+        await promiseAllInBatches(subtreeSplits, batchSize, async (split: subtreeSplit) => {
             let hash = await getExecOutput(splitshPath, [`--prefix=${split.directory}`, `--origin=tags/${tag}`]);
             let clonePath = `./.repositories/${split.name}/`;
 
@@ -123,7 +123,7 @@ async function promiseAllInBatches(subtreeSplits: subtreeSplit[], handler: any):
             return;
         }
 
-        await promiseAllInBatches(subtreeSplits, async (split: subtreeSplit) => {
+        await promiseAllInBatches(subtreeSplits, batchSize, async (split: subtreeSplit) => {
             let clonePath = `./.repositories/${split.name}/`;
             fs.mkdirSync(clonePath, { recursive: true});
 

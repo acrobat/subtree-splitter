@@ -40,7 +40,7 @@ async function downloadSplitsh(): Promise<void> {
  * @param {function(subtreeSplit): Promise<void>} handler
  */
 async function promiseAllInBatches(subtreeSplits: subtreeSplit[], handler: any): Promise<void> {
-    const batchSize = 4;
+    const batchSize = 2;
     let position = 0;
     while (position < subtreeSplits.length) {
         core.info('Processing batch ' + (position / batchSize + 1) + '/'+(Math.round(subtreeSplits.length / batchSize)));

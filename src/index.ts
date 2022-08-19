@@ -36,9 +36,26 @@ async function downloadSplitsh(): Promise<void> {
     removeDir(downloadDir);
 }
 
+/**
+ * @param {function(subtreeSplit): Promise<void>} handler
+ */
+async function promiseAllInBatches(subtreeSplits: subtreeSplit[], batchSize: number, handler: any): Promise<void> {
+    let position = 0;
+    while (position < subtreeSplits.length) {
+        core.info('Processing batch ' + (position / batchSize + 1) + '/'+(Math.round(subtreeSplits.length / batchSize)));
+
+        const itemsForBatch = subtreeSplits.slice(position, position + batchSize);
+
+        await Promise.all(itemsForBatch.map(split => handler(split)));
+        position += batchSize;
+    }
+}
+
 (async () => {
     const context = github.context;
     const configPath = core.getInput('config-path');
+    const batchSizeConfig = core.getInput('batch-size');
+    const batchSize = isNaN(parseInt(batchSizeConfig)) ? 1 : parseInt(batchSizeConfig);
 
     if (!fs.existsSync(splitshPath)) {
         await downloadSplitsh();
@@ -69,9 +86,9 @@ async function downloadSplitsh(): Promise<void> {
         }
 
         // On push sync commits
-        await Promise.all(subtreeSplits.map(async (split: subtreeSplit) => {
+        await promiseAllInBatches(subtreeSplits, batchSize, async (split: subtreeSplit) => {
             await publishSubSplit(splitshPath, split.name, branch, split.name, split.directory);
-        }));
+        });
     } else if (context.eventName === 'create') {
         // Tag created
         let event = context.payload as CreateEvent;
@@ -83,7 +100,7 @@ async function downloadSplitsh(): Promise<void> {
             return;
         }
 
-        await Promise.all(subtreeSplits.map(async (split: subtreeSplit) => {
+        await promiseAllInBatches(subtreeSplits, batchSize, async (split: subtreeSplit) => {
             let hash = await getExecOutput(splitshPath, [`--prefix=${split.directory}`, `--origin=tags/${tag}`]);
             let clonePath = `./.repositories/${split.name}/`;
 
@@ -94,7 +111,7 @@ async function downloadSplitsh(): Promise<void> {
             // TODO: smart tag skipping (skip patch releases where commit was previously tagged) minor and major releases should always get a tag
             await exec('git', ['tag', '-a', tag, hash, '-m', `"Tag ${tag}"`], { cwd: clonePath });
             await exec('git', ['push', '--tags'], { cwd: clonePath });
-        }));
+        });
     } else if (context.eventName === 'delete') {
         // Tag removed
         let event = context.payload as DeleteEvent;
@@ -106,7 +123,7 @@ async function downloadSplitsh(): Promise<void> {
             return;
         }
 
-        await Promise.all(subtreeSplits.map(async (split: subtreeSplit) => {
+        await promiseAllInBatches(subtreeSplits, batchSize, async (split: subtreeSplit) => {
             let clonePath = `./.repositories/${split.name}/`;
             fs.mkdirSync(clonePath, { recursive: true});
 
@@ -115,7 +132,7 @@ async function downloadSplitsh(): Promise<void> {
             if (await tagExists(tag, clonePath)) {
                 await exec('git', ['push', '--delete', tag], { cwd: clonePath});
             }
-        }));
+        });
     }
 })().catch(error => {
     core.setFailed(error);

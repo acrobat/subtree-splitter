@@ -109,7 +109,10 @@ async function promiseAllInBatches(subtreeSplits: subtreeSplit[], batchSize: num
             await exec('git', ['clone', split.target, '.'], { cwd: clonePath});
 
             // TODO: smart tag skipping (skip patch releases where commit was previously tagged) minor and major releases should always get a tag
-            await exec('git', ['tag', '-a', tag, hash, '-m', `"Tag ${tag}"`], { cwd: clonePath });
+
+            if (!await tagExists(tag, clonePath)) {
+                await exec('git', ['tag', '-a', tag, hash, '-m', `"Tag ${tag}"`], {cwd: clonePath});
+            }
             await exec('git', ['push', '--tags'], { cwd: clonePath });
         });
     } else if (context.eventName === 'delete') {

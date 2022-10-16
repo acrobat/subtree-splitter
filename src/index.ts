@@ -67,9 +67,9 @@ async function promiseAllInBatches(subtreeSplits: subtreeSplit[], batchSize: num
     console.table(subtreeSplits);
 
     // Make sure all remotes are correctly setup, this must be done synchronously to avoid race conditions.
-    subtreeSplits.map((split: subtreeSplit) => {
-        ensureRemoteExists(split.name, split.target);
-    });
+    for (let split of subtreeSplits) {
+        await ensureRemoteExists(split.name, split.target);
+    }
 
     if (context.eventName === 'push' ) {
         if (!context.ref.includes('refs/heads')) {

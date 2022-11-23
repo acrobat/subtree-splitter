@@ -65,7 +65,7 @@ jobs:
                     fetch-depth: 0
 
             # Add a personal access token to the repository secrets. This will allow the splitter action to push the new commits
-            -   uses: frankdejonge/use-github-token@1.0.1
+            -   uses: frankdejonge/use-github-token@1.0.2
                 with:
                     authentication: 'username:${{ secrets.PERSONAL_GITHUB_TOKEN }}'
                     user_name: 'Committer name'
@@ -80,7 +80,7 @@ jobs:
 
             # Sync commits and tags for the configured subtree splits
             -   name: subtree split
-                uses: acrobat/subtree-splitter@v1
+                uses: acrobat/subtree-splitter@v1.1.3
                 with:
                     config-path: .github/subtree-splitter-config.json # Reference the location where you saved your config file
 ```

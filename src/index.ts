@@ -133,7 +133,7 @@ async function promiseAllInBatches(subtreeSplits: subtreeSplit[], batchSize: num
             await exec('git', ['clone', split.target, '.'], { cwd: clonePath});
 
             if (await tagExists(tag, clonePath)) {
-                await exec('git', ['push', '--delete', tag], { cwd: clonePath});
+                await exec('git', ['push', '--delete', 'origin', tag], { cwd: clonePath});
             }
         });
     }

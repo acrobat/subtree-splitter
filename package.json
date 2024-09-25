@@ -2,7 +2,7 @@
   "name": "subtree-splitter",
   "private": true,
   "engines": {
-    "node": "12"
+    "node": "20"
   },
   "author": "Jeroen Thora",
   "license": "MIT",

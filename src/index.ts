@@ -78,7 +78,7 @@ async function promiseAllInBatches(subtreeSplits: subtreeSplit[], batchSize: num
             return;
         }
 
-        const branch = context.ref.split('/').pop();
+        const branch = context.ref.replace(/^refs\/heads\//, '')
         if (typeof branch == 'undefined') {
             core.error('Unable to get branch name from event data. Got ref "'+context.ref+'"');
 

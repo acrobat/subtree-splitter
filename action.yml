@@ -9,7 +9,7 @@ inputs:
         description: 'How many subtreesplits should be processed in parallel'
         default: '4'
 runs:
-    using: 'node20'
+    using: 'node24'
     main: 'dist/index.js'
 branding:
     icon: shuffle
